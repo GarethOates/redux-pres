@@ -1,13 +1,22 @@
 const defaultState = {
-    'names': []
+    'names': [],
+    'count': 0
 };
 
-const Store = Redux.createStore(reducer, defaultState , makeDebugToolParams());
+const Store = Redux.createStore(reducer, makeDebugToolParams());
 
 function reducer(state, action) {
+    if (!state) {
+        state = defaultState;
+    }
+
     switch (action.type) {
         case 'NAMES':
-            const patch = {'names': action.payload};
+            const patch = {
+                'names': action.payload,
+                // computed value
+                'count': Array.isArray(action.payload) ? action.payload.length : 0
+            };
 
             state = Object.assign({}, state, patch);
 
@@ -28,18 +37,22 @@ function setNames(names) {
 }
 
 //////////////////////////////////// helpers ///////////////////////////////////////
-let container = document.getElementById('names');
+const
+    namesContainer = document.getElementById('namesContainer'),
+    nameCountContainer = document.getElementById('name-count');
 
 // this code updates your components in your application
 function onStateUpdate() {
     const state = Store.getState();
 
-    // clear the container
-    container.innerHTML = '';
+    // clear the namesContainer
+    namesContainer.innerHTML = '';
 
     if (state.names) {
         state.names.forEach(addListItem);
     }
+
+    nameCountContainer.textContent = state.count;
 }
 
 function addListItem(text) {
@@ -47,7 +60,7 @@ function addListItem(text) {
 
     item.textContent = text;
 
-    container.appendChild(item);
+    namesContainer.appendChild(item);
 }
 
 /**
