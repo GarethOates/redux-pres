@@ -20,6 +20,12 @@ function reducer(state, action) {
 
 Store.subscribe(onStateUpdate);
 
+function setNames(names) {
+    return {
+        type: 'NAMES',
+        payload: names
+    }
+}
 
 //////////////////////////////////// helpers ///////////////////////////////////////
 let container = document.getElementById('names');
