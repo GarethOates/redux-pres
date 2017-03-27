@@ -2,12 +2,18 @@ const defaultState = {
     'names': []
 };
 
-const Store = Redux.createStore(reducer, defaultState /*, makeDebugToolParams()*/);
+const Store = Redux.createStore(reducer, makeDebugToolParams());
 
 function reducer(state, action) {
+    if (!state) {
+        state = defaultState;
+    }
+
     switch (action.type) {
         case 'NAMES':
-            state.names = action.payload;
+            const patch = {'names': action.payload};
+
+            state = Object.assign({}, state, patch);
 
             return state;
 
