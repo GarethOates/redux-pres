@@ -1,40 +1,50 @@
-const Store = Redux.createStore(reducer);
+const defaultState = {
+    'names': []
+};
+
+const Store = Redux.createStore(reducer, defaultState /*, makeDebugToolParams()*/);
 
 function reducer(state, action) {
-    if (!state) {
-        state = {
-            'things': []
-        };
+    switch (action.type) {
+        case 'NAMES':
+            state.names = action.payload;
 
-        return state;
+            return state;
+
+        default:
+            return state;
     }
-
-    if (action.payload.things) {
-        state.things = action.payload.things;
-    }
-
-    return state;
 }
 
 Store.subscribe(onStateUpdate);
 
 
 //////////////////////////////////// helpers ///////////////////////////////////////
+let container = document.getElementById('names');
 
 // this code updates your components in your application
 function onStateUpdate() {
     const state = Store.getState();
 
-    if (state.things) {
-        state.things.forEach(addListItem);
+    // clear the container
+    container.innerHTML = '';
+
+    if (state.names) {
+        state.names.forEach(addListItem);
     }
 }
 
 function addListItem(text) {
-    const container = document.getElementById('things');
     const item = document.createElement('li');
 
     item.textContent = text;
 
     container.appendChild(item);
+}
+
+/**
+ * Only needed for use with the chrome extension redux debug tools
+ */
+function makeDebugToolParams() {
+    return Redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f);
 }
