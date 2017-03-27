@@ -2,9 +2,13 @@ const defaultState = {
     'names': []
 };
 
-const Store = Redux.createStore(reducer, defaultState , makeDebugToolParams());
+const Store = Redux.createStore(reducer, makeDebugToolParams());
 
 function reducer(state, action) {
+    if (!state) {
+        state = defaultState;
+    }
+
     switch (action.type) {
         case 'NAMES':
             const patch = {'names': action.payload};
@@ -20,6 +24,12 @@ function reducer(state, action) {
 
 Store.subscribe(onStateUpdate);
 
+function setNames(names) {
+    return {
+        type: 'NAMES',
+        payload: names
+    }
+}
 
 //////////////////////////////////// helpers ///////////////////////////////////////
 let container = document.getElementById('names');
